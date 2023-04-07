@@ -1,34 +1,28 @@
-from graphics import Window, Line, Point, Cell
-import unittest
+from graphics import Window
 from maze import Maze
+import sys
+
 
 def main():
-    win = Window(800, 600)
-    win.draw_line(Line(Point(1,1), Point(100,100)), "black")
-    cell = Cell(x1=20,x2=40,y1=30,y2=50, win=win, 
-                has_left_wall=True, 
-                has_right_wall=True, 
-                has_top_wall=True,
-                has_bottom_wall=True)
-    cell.draw()
+    num_rows = 12
+    num_cols = 16
+    margin = 50
+    screen_x = 800
+    screen_y = 600
+    cell_size_x = (screen_x - 2 * margin) / num_cols
+    cell_size_y = (screen_y - 2 * margin) / num_rows
+
+    sys.setrecursionlimit(10000)
+    win = Window(screen_x, screen_y)
+
+    maze = Maze(margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, win, 10)
+    print("maze created")
+    is_solveable = maze.solve()
+    if not is_solveable:
+        print("maze can not be solved!")
+    else:
+        print("maze solved!")
     win.wait_for_close()
 
+
 main()
-
-class Tests(unittest.TestCase):
-    def test_maze_create_cells(self):
-        num_cols = 12
-        num_rows = 10
-        m1 = Maze(0, 0, num_rows, num_cols, 10, 10)
-        self.assertEqual(
-            len(m1._cells),
-            num_cols,
-        )
-        self.assertEqual(
-            len(m1._cells[0]),
-            num_rows,
-        )
-
-if __name__ == "__main__":
-    unittest.main()
-    
